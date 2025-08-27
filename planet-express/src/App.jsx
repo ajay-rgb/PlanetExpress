@@ -6,13 +6,17 @@ import InfoPopup from './components/InfoPopup';
 import NewsCard from './components/NewsCard';
 import { latLontoVector3 } from './utils/latLontoVector3';
 import { vector3ToLatLon } from './utils/vector3ToLatLon';
+import Header from './components/Header'
 
 function App() {
+
   const [newsArticles, setNewsArticles] = useState([]);
   const [isLoadingNews, setIsLoadingNews] = useState(false);
+  
   const [selectedMarker, setSelectedMarker] = useState(null);
-  const [earthquakeData, setEarthquakeData] = useState([]);
   const [userMarkers, setUserMarkers] = useState([]);
+
+
   const canvasContainerRef = useRef();
   
   const fetchNewsForCountry = async (country) => {
@@ -35,11 +39,6 @@ function App() {
     }
   };
 
-  // Effect for fetching earthquake data
-  useEffect(() => {
-    const fetchData = async () => { /* ... */ };
-    fetchData();
-  }, []); 
 
   useEffect(() => {
     fetchNewsForCountry('India');
@@ -65,44 +64,49 @@ function App() {
     }
   };
 
-  const allMarkers = useMemo(() => {
-    const globeRadius = 1.5;
-    const apiMarkers = earthquakeData.map(event => ({
-      ...event,
-      position: latLontoVector3(event.lat, event.lon, globeRadius)
-    }));
-    return [...apiMarkers, ...userMarkers];
-  }, [earthquakeData, userMarkers]);
 
   return (
     <div className="w-screen h-screen relative bg-gray-900 flex items-center justify-center overflow-hidden">
-      <h1 className='absolute top-4 text-white text-4xl font-bold z-10'>
-        GeoNews Explorer
-      </h1>
+      <Header/>
+      
+      
+
       <div ref={canvasContainerRef} className="w-[600px] h-[600px]">
-        <Canvas /* ... */ >
-          <Stars /* ... */ />
+        <Canvas
+          // eventSource={canvasContainerRef}
+          // camera={{ position: [0, 0, 4] }}
+        >
+          <Stars radius={300} depth={50} count={10000} factor={8} saturation={0} fade speed={1} />
           <ambientLight intensity={0.8} />
           <directionalLight position={[2, 5, 2]} intensity={1} />
-          <OrbitControls /* ... */ />
+          <OrbitControls 
+            autoRotate 
+            autoRotateSpeed={0.3} 
+            enableZoom={false}
+            enablePan={false}
+          />
           <Globe
-            data={allMarkers}
+            data={userMarkers}
             onGlobeClick={handleGlobeClick}
             onMarkerClick={setSelectedMarker}
           />
         </Canvas>
       </div>
-      {selectedMarker && <InfoPopup />}
+
+      {selectedMarker && <InfoPopup data={selectedMarker} onClose={() => setSelectedMarker(null)} />}
+
       {isLoadingNews && (
         <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl animate-pulse">
-          Fetching Regional News...
+          Fetching News...
         </p>
       )}
-      <div className="absolute no-scrollbar top-24 left-10 h-[calc(100%-7rem)] w-80 flex flex-col overflow-y-auto p-2">
+
+      <div className="absolute top-24 left-10 h-[calc(100%-7rem)] w-80 flex flex-col overflow-y-auto p-2 no-scrollbar">
         {newsArticles.slice(0, 5).map(article => (
           <NewsCard key={article.url} article={article} />
         ))}
       </div>
+
       <div className="absolute top-24 right-10 h-[calc(100%-7rem)] w-80 flex flex-col overflow-y-auto p-2 no-scrollbar">
         {newsArticles.slice(5, 10).map(article => (
           <NewsCard key={article.url} article={article} />
