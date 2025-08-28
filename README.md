@@ -1,7 +1,8 @@
 # 🌎 Planet Express 🚀
 
 ### Your world, delivered. An interactive 3D news explorer built with React and Three.js.
-<img width="1917" height="932" alt="image" src="https://github.com/user-attachments/assets/eb326790-6485-4314-9000-d1fc68fe7a42" />
+
+![Uploading image.png…]()
 
 
 
