@@ -2,7 +2,7 @@
 
 ### Your world, delivered. An interactive 3D news explorer built with React and Three.js.
 
-![Uploading image.png…]()
+
 
 
 
@@ -87,7 +87,7 @@ Want to run this on your own machine? Here’s how you can get set up.
 
 -----
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 This project wouldn't be possible without the amazing free APIs provided by:
 
